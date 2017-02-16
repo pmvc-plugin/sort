@@ -5,14 +5,32 @@ ${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\sort';
 
 class sort extends \PMVC\PlugIn
 {
+
+    public function init()
+    {
+        if (!isset($this['sort'])) {
+            $this['sort'] = 'uasort';
+        }
+
+        if (!isset($this['comparison'])) {
+            $this['comparison'] = 'strnatcmp';
+        }
+    }
+
     /**
      * usort($arr, _byColumn('key'));
      */
-    private function _byColumn($key)
+    private function _byColumn($key, $descending)
     {
-        return function ($a, $b) use ($key) {
-            return strnatcmp($a[$key], $b[$key]);
-        }; 
+        if ($descending) { 
+            return function ($a, $b) use ($key) {
+                return $this['comparison']( $b[$key],$a[$key]);
+            };
+        } else {
+            return function ($a, $b) use ($key) {
+                return $this['comparison']( $a[$key],$b[$key]);
+            };
+        }
     }
 
     /**
@@ -23,8 +41,8 @@ class sort extends \PMVC\PlugIn
      * $arr = [[0,3], [0,1]];
      * \PMVC\plug('sort')->byColumn([&$arr, '1']); //sort with key 1
      */
-    public function byColumn(array $params)
+    public function byColumn(array $params, $descending = null)
     {
-        usort($params[0], $this->_byColumn($params[1]));
+        $this['sort']($params[0], $this->_byColumn($params[1], $descending));
     }
 }
