@@ -8,11 +8,6 @@ class sort extends \PMVC\PlugIn
 
     public function init()
     {
-        $this->reset();
-    }
-
-    public function reset()
-    {
         if (!isset($this['sort'])) {
             $this['sort'] = 'uasort';
         }
@@ -20,6 +15,13 @@ class sort extends \PMVC\PlugIn
         if (!isset($this['comparison'])) {
             $this['comparison'] = 'strnatcmp';
         }
+    }
+
+    public function reset()
+    {
+        unset($this['sort']);
+        unset($this['comparison']);
+        $this->init();
     }
 
     /**
