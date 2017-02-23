@@ -8,6 +8,11 @@ class sort extends \PMVC\PlugIn
 
     public function init()
     {
+        $this->reset();
+    }
+
+    public function reset()
+    {
         if (!isset($this['sort'])) {
             $this['sort'] = 'uasort';
         }
@@ -43,6 +48,13 @@ class sort extends \PMVC\PlugIn
      */
     public function byColumn(array $params, $descending = null)
     {
-        $this['sort']($params[0], $this->_byColumn($params[1], $descending));
+        $this['sort'](
+            $params[0],
+            $this->_byColumn(
+                $params[1],
+                $descending
+            )
+        );
+        return $this;
     }
 }
