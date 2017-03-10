@@ -31,11 +31,27 @@ class sort extends \PMVC\PlugIn
     {
         if ($descending) { 
             return function ($a, $b) use ($key) {
-                return $this['comparison']( $b[$key],$a[$key]);
+                return $this['comparison']( $b[$key], $a[$key] );
             };
         } else {
             return function ($a, $b) use ($key) {
-                return $this['comparison']( $a[$key],$b[$key]);
+                return $this['comparison']( $a[$key], $b[$key] );
+            };
+        }
+    }
+
+    /**
+     * usort($arr, _byColumn(key[]));
+     */
+    private function _byPath(array $path, $descending)
+    {
+        if ($descending) { 
+            return function ($a, $b) use ($path) {
+                return $this['comparison']( \PMVC\value($b, $path, $b), \PMVC\value($a, $path, $a) );
+            };
+        } else {
+            return function ($a, $b) use ($path) {
+                return $this['comparison']( \PMVC\value($a, $path, $a), \PMVC\value($b, $path, $b) );
             };
         }
     }
@@ -50,13 +66,20 @@ class sort extends \PMVC\PlugIn
      */
     public function byColumn(array $params, $descending = null)
     {
-        $this['sort'](
-            $params[0],
-            $this->_byColumn(
+        if (is_array($params[1])) {
+            $callback = $this->_byPath(
                 $params[1],
                 $descending
-            )
+            );
+        } else {
+            $callback = $this->_byColumn(
+                $params[1],
+                $descending
+            );
+        }
+        $this['sort'](
+            $params[0],
+            $callback
         );
-        return $this;
     }
 }
