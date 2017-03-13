@@ -81,5 +81,6 @@ class sort extends \PMVC\PlugIn
             $params[0],
             $callback
         );
+        return $this[\PMVC\THIS]; // for call reset directly
     }
 }
