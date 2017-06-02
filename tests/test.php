@@ -56,4 +56,24 @@ class SortTest extends PHPUnit_Framework_TestCase
         $plug->byColumn([&$array,1]);
         $this->assertEquals($expected, $array);
     }
+
+    function testSortByObject()
+    {
+        $array = [
+            'a'=>(object)[
+                'a'=>1,
+                'b'=>2,
+            ],
+            'b'=>(object)[
+                'a'=>3,
+            ],
+            'c'=>(object)[
+                'a'=>4,
+                'b'=>5,
+            ],
+        ];
+        $plug = \PMVC\plug($this->_plug);
+        $plug->byColumn([&$array,['b']], true);
+        $this->assertEquals(['c', 'a', 'b'], array_keys($array));
+    }
 }

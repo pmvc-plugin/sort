@@ -47,11 +47,11 @@ class sort extends \PMVC\PlugIn
     {
         if ($descending) { 
             return function ($a, $b) use ($path) {
-                return $this['comparison']( \PMVC\value($b, $path, $b), \PMVC\value($a, $path, $a) );
+                return $this['comparison']( \PMVC\value($b, $path, 0), \PMVC\value($a, $path, 0) );
             };
         } else {
             return function ($a, $b) use ($path) {
-                return $this['comparison']( \PMVC\value($a, $path, $a), \PMVC\value($b, $path, $b) );
+                return $this['comparison']( \PMVC\value($a, $path, 0), \PMVC\value($b, $path, 0) );
             };
         }
     }
