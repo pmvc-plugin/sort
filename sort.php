@@ -24,6 +24,15 @@ class sort extends \PMVC\PlugIn
         $this->init();
     }
 
+    private function _callComparer($a, $b)
+    {
+        $result = $this['comparison']($a, $b);
+        if (!is_numeric($result)) {
+            $result = $result ? 1 : -1;
+        }
+        return $result;
+    }
+
     /**
      * usort($arr, _byColumn('key'));
      */
@@ -31,11 +40,11 @@ class sort extends \PMVC\PlugIn
     {
         if ($descending) { 
             return function ($a, $b) use ($key) {
-                return $this['comparison']( $b[$key], $a[$key] );
+                return $this->_callComparer( $b[$key], $a[$key] );
             };
         } else {
             return function ($a, $b) use ($key) {
-                return $this['comparison']( $a[$key], $b[$key] );
+                return $this->_callComparer( $a[$key], $b[$key] );
             };
         }
     }
@@ -47,11 +56,11 @@ class sort extends \PMVC\PlugIn
     {
         if ($descending) { 
             return function ($a, $b) use ($path) {
-                return $this['comparison']( \PMVC\value($b, $path, 0), \PMVC\value($a, $path, 0) );
+                return $this->_callComparer( \PMVC\value($b, $path, 0), \PMVC\value($a, $path, 0) );
             };
         } else {
             return function ($a, $b) use ($path) {
-                return $this['comparison']( \PMVC\value($a, $path, 0), \PMVC\value($b, $path, 0) );
+                return $this->_callComparer( \PMVC\value($a, $path, 0), \PMVC\value($b, $path, 0) );
             };
         }
     }
