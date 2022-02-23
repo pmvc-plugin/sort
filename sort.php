@@ -1,11 +1,10 @@
 <?php
 namespace PMVC\PlugIn\sort;
 
-${_INIT_CONFIG}[_CLASS] = __NAMESPACE__.'\sort';
+${_INIT_CONFIG}[_CLASS] = __NAMESPACE__ . '\sort';
 
 class sort extends \PMVC\PlugIn
 {
-
     public function init()
     {
         if (!isset($this['sort'])) {
@@ -38,13 +37,13 @@ class sort extends \PMVC\PlugIn
      */
     private function _byColumn($key, $descending)
     {
-        if ($descending) { 
+        if ($descending > 0) {
             return function ($a, $b) use ($key) {
-                return $this->_callComparer( $b[$key], $a[$key] );
+                return $this->_callComparer($b[$key], $a[$key]);
             };
         } else {
             return function ($a, $b) use ($key) {
-                return $this->_callComparer( $a[$key], $b[$key] );
+                return $this->_callComparer($a[$key], $b[$key]);
             };
         }
     }
@@ -54,13 +53,19 @@ class sort extends \PMVC\PlugIn
      */
     private function _byPath(array $path, $descending)
     {
-        if ($descending) { 
+        if ($descending > 0) {
             return function ($a, $b) use ($path) {
-                return $this->_callComparer( \PMVC\value($b, $path, 0), \PMVC\value($a, $path, 0) );
+                return $this->_callComparer(
+                    \PMVC\value($b, $path, 0),
+                    \PMVC\value($a, $path, 0)
+                );
             };
         } else {
             return function ($a, $b) use ($path) {
-                return $this->_callComparer( \PMVC\value($a, $path, 0), \PMVC\value($b, $path, 0) );
+                return $this->_callComparer(
+                    \PMVC\value($a, $path, 0),
+                    \PMVC\value($b, $path, 0)
+                );
             };
         }
     }
@@ -76,20 +81,11 @@ class sort extends \PMVC\PlugIn
     public function byColumn(array $params, $descending = null)
     {
         if (is_array($params[1])) {
-            $callback = $this->_byPath(
-                $params[1],
-                $descending
-            );
+            $callback = $this->_byPath($params[1], $descending);
         } else {
-            $callback = $this->_byColumn(
-                $params[1],
-                $descending
-            );
+            $callback = $this->_byColumn($params[1], $descending);
         }
-        $this['sort'](
-            $params[0],
-            $callback
-        );
+        $this['sort']($params[0], $callback);
         return $this[\PMVC\THIS]; // for call reset directly
     }
 }
